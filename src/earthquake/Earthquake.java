@@ -1,3 +1,3 @@
 package earthquake;
-public record Earthquake(String Id, int Depth, String TypeOfMagnitude, int Magnitude, String State, String Time ) {
+public record Earthquake(String Id, String Depth, String TypeOfMagnitude, String Magnitude, String State, String Time ) {
 }

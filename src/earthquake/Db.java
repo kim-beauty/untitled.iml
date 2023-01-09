@@ -2,31 +2,38 @@ package earthquake;
 import org.sqlite.JDBC;
 import java.sql.*;
 import java.util.*;
+import java.util.List;
+
 
 public class Db {
 
         // Константа, в которой хранится адрес подключения
-        private static final String CON_STR = "jdbc:sqlite:bdProject.db";
 
-        // Используем шаблон одиночка, чтобы не плодить множество
-        // экземпляров класса DbHandler
-        private static Db instance = null;
-
-        public static synchronized Db getInstance() throws SQLException {
-            if (instance == null)
-                instance = new Db();
-            return instance;
-        }
+//
+//        // Используем шаблон одиночка, чтобы не плодить множество
+//        // экземпляров класса DbHandler
+//        private static DbS instance = null;
+//
+//        public static synchronized Db getInstance() throws SQLException {
+//            if (instance == null)
+//                instance = new Db();
+//            return instance;
+//        }
 
         // Объект, в котором будет храниться соединение с БД
-        private Connection connection;
+        private static Connection connection;
+        protected static Statement statement;
 
-        private Db() throws SQLException {
+        public Db(String p) throws SQLException {
             // Регистрируем драйвер, с которым будем работать
             // в нашем случае Sqlite
-            DriverManager.registerDriver(new JDBC());
+            //DriverManager.registerDriver(new JDBC());
             // Выполняем подключение к базе данных
-            this.connection = DriverManager.getConnection(CON_STR);
+            final String CON_STR = "jdbc:sqlite:bdProject";
+
+            connection = DriverManager.getConnection(CON_STR);
+
+            statement = connection.createStatement();
         }
 
         public List<Earthquake> getAllEarthquake() {
@@ -41,9 +48,9 @@ public class Db {
                 // Проходимся по нашему resultSet и заносим данные в products
                 while (resultSet.next()) {
                     earth.add(new Earthquake(resultSet.getString("Id"),
-                            resultSet.getInt("Depth"),
+                            resultSet.getString("Depth"),
                             resultSet.getString("TypeOfMagnitude"),
-                            resultSet.getInt("Magnitude"),
+                            resultSet.getString("Magnitude"),
                             resultSet.getString("State"),
                             resultSet.getString("Time")
                     ));
@@ -71,7 +78,7 @@ public class Db {
                 statement.setObject(5, earthquake.State());
                 String var1 = earthquake.Time();
                 String[] val1 = var1.split("-");
-                String res1 = val1[1];
+                String res1 = val1[0];
 
                 statement.setObject(6, res1);
                 // Выполняем запрос
@@ -79,6 +86,20 @@ public class Db {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+
+        public static void CreateT(Parser p, Db e) throws SQLException{
+
+            String request = "CREATE TABLE IF NOT EXISTS Earth (Id TEXT, Depth TEXT, TypeOfMagnitude TEXT, Magnitude TEXT, State TEXT, Time TEXT) ";
+
+            statement.execute(request);
+
+            ResultSet resultSet = statement.executeQuery("Select count(*) FROM Earth");
+
+            if (resultSet.getInt(1) < 10){
+                p.earthquakesList.forEach(e::addEarthquake);
+            }
+
         }
 
         // Удаление продукта по id

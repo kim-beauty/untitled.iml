@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-            public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException{
             Parser pr = new Parser();
-            Db sqlite = new Db("jdbc:sqlite:bdProject.db");
-            Db.createTable(pr, sqlite);
+            Db sqlite = new Db("jdbc:sqlite:bdProject");
+            Db.CreateT(pr, sqlite);
             System.out.println("Ответы на задания.");
 
-            FirstTask();
+            //FirstTask();
             SecondTaskSQL();
             ThirdTaskSQL();
 
@@ -48,7 +48,9 @@ public class Main {
 
             String rez = "Select AVG(Magnitude) from Earth where State  = 'West Virginia'";
 
-            System.out.println(rez);
+            String answer = Db.statement.executeQuery(rez).getString(1);
+
+            System.out.println(answer);
         }
 
         public static void ThirdTaskSQL() throws SQLException {
@@ -56,7 +58,7 @@ public class Main {
             System.out.println("\nЗадание 3. \n" +
                     "Выведите в консоль название штата, в котором произошло самое глубокое землетрясение в 2013");
 
-            String rez = "select MAX(Magnitude) from Earth where Time = '2013' ";
+            String rez = "select State from Earth where Magnitude = (Select MAX(Magnitude) from earth where Time = '2013' ) limit 1";
 
             String answer = Db.statement.executeQuery(rez).getString("State");
 
@@ -66,4 +68,3 @@ public class Main {
 
 
     }
-}
