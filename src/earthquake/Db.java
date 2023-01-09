@@ -16,28 +16,6 @@ public class Db {
             statement = connection.createStatement();
         }
 
-        public List<Earthquake> getAllEarthquake() {
-            // Statement используется для того, чтобы выполнить sql-запрос
-            try (Statement statement = this.connection.createStatement()) {
-                List<Earthquake> earth = new ArrayList<Earthquake>();
-                ResultSet resultSet = statement.executeQuery("SELECT Id, Depth, TypeOfMagnitude,Magnitude,State,Time FROM Earth");
-                while (resultSet.next()) {
-                    earth.add(new Earthquake(resultSet.getString("Id"),
-                            resultSet.getString("Depth"),
-                            resultSet.getString("TypeOfMagnitude"),
-                            resultSet.getString("Magnitude"),
-                            resultSet.getString("State"),
-                            resultSet.getString("Time")
-                    ));
-                }
-                return earth;
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return Collections.emptyList();
-            }
-        }
-
         public void addEarthquake (Earthquake earthquake) {
             try (PreparedStatement statement = this.connection.prepareStatement(
                     "INSERT INTO Earth (`Id`, `Depth`, `TypeOfMagnitude`,`Magnitude`,`State`,`Time`) " +
@@ -66,16 +44,5 @@ public class Db {
                 p.earthquakesList.forEach(e::addEarthquake);
             }
 
-        }
-
-        public void deleteEarthquake (int id) {
-            try (PreparedStatement statement = this.connection.prepareStatement(
-                    "DELETE FROM Earth WHERE Id = ?")) {
-                statement.setObject(1, id);
-                // Выполняем запрос
-                statement.execute();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }

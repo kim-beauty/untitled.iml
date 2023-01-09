@@ -10,8 +10,7 @@ public class Main {
             Parser pr = new Parser();
             Db sqlite = new Db("jdbc:sqlite:bdProject");
             Db.CreateT(pr, sqlite);
-            System.out.println("Ответы на задания.");
-
+            System.out.println("Ответы");
             First();
             Second();
             Third();
@@ -46,7 +45,7 @@ public class Main {
 
         public static void Third() throws SQLException {
             //Выведите в консоль название штата, в котором произошло самое глубокое землетрясение в 2013 году
-            System.out.println("\nЗадание 3. \n" +
+            System.out.println("\nЗадание 3 \n" +
                     "Выведите в консоль название штата, в котором произошло самое глубокое землетрясение в 2013");
             String rez = "select State from Earth where Magnitude = (Select MAX(Magnitude) from earth where Time = '2013' ) limit 1";
             String answer = Db.statement.executeQuery(rez).getString("State");
