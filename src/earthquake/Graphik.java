@@ -19,12 +19,12 @@ public class Graphik extends JFrame {
 
         String title = "Постройте график по среднему количеству землетрясений для каждого года";
         String catAxixLabel = "Год";
-        String value = "Среднее количество землятрясений в год";
-        return ChartFactory.createBarChart(title, catAxixLabel, value, dataset, PlotOrientation.HORIZONTAL, true, true, true);
+        String val = "Среднее количество землятрясений в год";
+        return ChartFactory.createBarChart(title, catAxixLabel, val, dataset, PlotOrientation.HORIZONTAL, true, true, true);
     }
 
-    private void DrawGraph(Map<String, Float> average) {
-        CategoryDataset dataset = createDS(average);
+    private void DrawGraph(Map<String, Float> grape) {
+        CategoryDataset dataset = createDS(grape);
         JFreeChart chart = createGraph(dataset);
         chart.setBackgroundPaint(Color.white);
         chart.getTitle().setPaint(Color.black);
@@ -35,7 +35,7 @@ public class Graphik extends JFrame {
 
     private CategoryDataset createDS(Map<String, Float> capitals) {
         DefaultCategoryDataset ds = new DefaultCategoryDataset();
-        capitals.forEach((Time, Average) ->
-               ds.setValue(Average, "Time", Time));
+        capitals.forEach((Time, grape) ->
+               ds.setValue(grape, "Time", Time));
         return ds;}
     }

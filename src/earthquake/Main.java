@@ -20,7 +20,7 @@ public class Main {
             //Постройте график по среднему количеству землетрясений для каждого года
             Map<String, Float> countEarthquake = new HashMap<>();
             String req = "SELECT  Time,Count(Time) AS Id\n" +
-                    " FROM Earth\n" + "GROUP BY Time ";
+                    " FROM Earth\n"  +"GROUP BY Time\n "+"ORDER BY Time DESC" ;
             ResultSet resSet = earthquake.Db.statement.executeQuery(req);
             while (resSet.next()){
                 countEarthquake.put(
